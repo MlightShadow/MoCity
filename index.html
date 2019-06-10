@@ -3,71 +3,204 @@
 
 <head>
     <title>Socket.IO chat</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font: 13px Helvetica, Arial;
-        }
-
-        form {
-            background: #000;
-            padding: 3px;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-        }
-
-        form input {
-            border: 0;
-            padding: 10px;
-            width: 90%;
-            margin-right: .5%;
-        }
-
-        form button {
-            width: 9%;
-            background: rgb(130, 224, 255);
-            border: none;
-            padding: 10px;
-        }
-
-        #messages {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        #messages li {
-            padding: 5px 10px;
-        }
-
-        #messages li:nth-child(odd) {
-            background: #eee;
-        }
     </style>
-    <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body>
-    <ul id="messages"></ul>
-    <form action="">
-        <input id="m" autocomplete="off" /><button>发送</button>
-    </form>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
+                <canvas id="world" width="1024" height="768"></canvas>
+            </div>
+
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
+                <ul id="messages"></ul>
+
+
+
+            </div>
+        </div>
+    </div>
+
+    <nav class="navbar fixed-bottom navbar-light bg-light">
+
+        <div class="input-group mb-3">
+            <input type="text" id="m" autocomplete="off" class="form-control" placeholder=""
+                aria-describedby="basic-addon2">
+            <div class="input-group-append">
+                <button type="button" class="btn btn-primary">发送</button>
+            </div>
+        </div>
+    </nav>
+
 </body>
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script>
+    function draw() {
+        var canvas = document.getElementById('world');
+        if (canvas.getContext) {
+            var ctx = canvas.getContext('2d');
+            var arch = [
+            {
+                    x: 200,
+                    y: 100,
+                    name: '塔尖',
+                    type: 'map'
+                },
+                {
+                    x: 200,
+                    y: 150,
+                    name: '顶楼',
+                    type: 'map'
+                },
+                {
+                    x: 200,
+                    y: 200,
+                    name: '2楼',
+                    type: 'map'
+                },
+                {
+                    x: 200,
+                    y: 250,
+                    name: '底楼',
+                    type: 'map'
+                },
+                {
+                    x: 100,
+                    y: 225,
+                    name: '广场',
+                    type: 'map'
+                },
+                {
+                    x: 300,
+                    y: 225,
+                    name: '广场',
+                    type: 'map'
+                },
+                {
+                    x: 100,
+                    y: 250,
+                    name: '仲老板',
+                    type: 'player'
+                },
+                {
+                    x: 250,
+                    y: 200,
+                    name: '小胖',
+                    type: 'player'
+                }
+            
+            /*{
+                    x: 100,
+                    y: 175,
+                    name: '宜山',
+                    type: 'map'
+                },
+                {
+                    x: 200,
+                    y: 200,
+                    name: '娄山关',
+                    type: 'map'
+                },
+                {
+                    x: 300,
+                    y: 225,
+                    name: '虹桥',
+                    type: 'map'
+                },
+                {
+                    x: 300,
+                    y: 175,
+                    name: '垃圾场',
+                    type: 'map'
+                },
+                {
+                    x: 100,
+                    y: 225,
+                    name: '沙县小吃',
+                    type: 'map'
+                },
+                {
+                    x: 200,
+                    y: 150,
+                    name: '地铁口',
+                    type: 'map'
+                },
+                {
+                    x: 200,
+                    y: 250,
+                    name: '商场',
+                    type: 'map'
+                },
+                {
+                    x: 100,
+                    y: 250,
+                    name: '仲老板',
+                    type: 'player'
+                },
+                {
+                    x: 250,
+                    y: 200,
+                    name: '小胖',
+                    type: 'player'
+                }*/
+            ];
+
+            for (var i in arch) {
+                if (arch[i].type === 'map') {
+                    ctx.beginPath();
+                    ctx.moveTo(arch[i].x + -75, arch[i].y + 0);
+                    ctx.lineTo(arch[i].x + -25, arch[i].y + 25);
+                    ctx.lineTo(arch[i].x + 25, arch[i].y + 25);
+                    ctx.lineTo(arch[i].x + 75, arch[i].y + 0);
+                    ctx.lineTo(arch[i].x + 25, arch[i].y + -25);
+                    ctx.lineTo(arch[i].x + -25, arch[i].y + -25);
+                    ctx.closePath();
+                    ctx.stroke();
+                    ctx.fillText(arch[i].name, arch[i].x, arch[i].y);
+                } else if (arch[i].type === 'player') {
+                    ctx.beginPath();
+                    ctx.arc(arch[i].x + 0, arch[i].y + -10, 5, 0, Math.PI * 2, true); // 绘制
+                    ctx.moveTo(arch[i].x + 0, arch[i].y + -5);
+                    ctx.lineTo(arch[i].x + -3, arch[i].y);
+                    ctx.moveTo(arch[i].x + 0, arch[i].y + -5);
+                    ctx.lineTo(arch[i].x + 3, arch[i].y);
+                    ctx.moveTo(arch[i].x + 0, arch[i].y + -5);
+                    ctx.lineTo(arch[i].x, arch[i].y);
+                    ctx.lineTo(arch[i].x + 3, arch[i].y + 5);
+                    ctx.moveTo(arch[i].x, arch[i].y);
+                    ctx.lineTo(arch[i].x + -3, arch[i].y + 5);
+                    ctx.stroke();
+
+                    ctx.fillText(arch[i].name, arch[i].x + 4, arch[i].y + -3);
+                }
+
+            }
+
+
+
+        }
+    }
+
+
+
+
+
+    draw()
+</script>
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
-    var name = prompt("请输入你的昵称：");
+    var name = ""; //prompt("请输入你的昵称：");
     var socket = io()
 
     //发送昵称给后端，并更改网页title
     socket.emit("join", name)
-    document.title = name + "的群聊" //new addition
+    document.title = name + "的魔都捡破烂" //new addition
 
     //接收到服务器发来的message事件
     socket.on("message", function (msg) {
@@ -83,11 +216,10 @@
     }
 
     //当发送按钮被点击时
-    $('form').submit(function () {
+    $('button').click(function () {
         var msg = $("#m").val() //获取用户恮的信息
         socket.emit("message", msg) //将消息发送给服务器
         $("#m").val("") //置空消息框
-        return false //阻止form提交
     })
 </script>
 

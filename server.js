@@ -28,7 +28,7 @@ io.on('connection', function (socket) {
             name: name + ' (' + socket.id + ')',
             socket: socket
         }
-        io.emit("message", usocket[socket.id].name + " 加入了群聊")
+        io.emit("message", usocket[socket.id].name + " 进入了世界")
 
         showStatus();
     })
