@@ -1,2 +1,0 @@
-# MoCity
-scavenger of mocity
